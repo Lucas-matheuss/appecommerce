@@ -5,8 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "sequelize-cli db:migrate",
-    "migrate:undo": "sequelize-cli db:migrate:undo"
+    "dev": "server.js",
+    "start": "node server.js",
+    "migrate": "sequelize-cli db:migrate --config src/config/config.js --migrations-path src/migrations",
+    "migrate:undo": "sequelize-cli db:migrate:undo:all --config src/config/config.js --migrations-path src/migrations",
+    "seed": "sequelize-cli db:seed:all --config src/config/config.js --seedrs-path src/seeders",
+    "seed:undo": "sequelize-cli db:seed:undo:all --config src/config/config.js --seeders-path src/seeders",
+    "migration:create": "sequelize-cli migration:generate --config src/config/config.js --migration-path src/migrations --name"
   },
   "keywords": [],
   "author": "",
