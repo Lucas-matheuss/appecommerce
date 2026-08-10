@@ -27,7 +27,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json( { limit: '10kb' }))
 
 app.get('/', (req, res) => {
-    res.send("API E-commerce funcionando 🚀")
+    res.json({ message: "API E-commerce funcionando 🚀", status: 'OK'})
 })
 
 app.use('/auth', authRoutes)
@@ -35,5 +35,20 @@ app.use('/users', usersRoutes)
 app.use('/products', productsRoutes)
 app.use('/cart', cartRoutes)
 app.use('/orders', ordersRoutes)
+
+// Middleware Global de Erros - Captura erros disparados dentro das suas rotas (ex: try/catch)
+app.use((err, req, res, next) => {
+    console.error('💥 Erro interno no servidor:', err);
+    
+    // Evita expor a stack de erro interna em produção para o cliente
+    const message = process.env.NODE_ENV === 'production' 
+        ? 'Ocorreu um erro interno no servidor.' 
+        : err.message;
+
+    res.status(err.status || 500).json({
+        error: message,
+        ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+    });
+});
 
 export default app;
